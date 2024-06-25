@@ -11,6 +11,7 @@ model = AutoModel.from_pretrained('vinai/phobert-base')
 tokenizer = AutoTokenizer.from_pretrained('vinai/phobert-base')
 
 
+
 def get_embedding(item):
     tokens = tokenizer(item['text'], return_tensors='pt', truncation=True, padding='max_length', max_length=128)
 
