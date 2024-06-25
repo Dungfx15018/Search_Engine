@@ -1,14 +1,18 @@
 import json
+import os
 class TFIDF():
+
     def __init__(self):
         # Load data
-        with open('docs.json', 'r', encoding='utf-8') as f:
+        with open('docs_3.json', 'r', encoding='utf-8') as f:
             self.docs = json.load(f)
 
-        with open('ds.json', 'r', encoding='utf-8') as f:
+        with open('ds_3.json', 'r', encoding='utf-8') as f:
             self.ds = json.load(f)
-        with open('tf_idf_list.json', 'r', encoding='utf-8') as f:
+        with open('tf_idf_list_3.json', 'r', encoding='utf-8') as f:
             self.tf_idf_list = json.load(f)
+
+
 
     def search(self, q, k):
         results = []
@@ -17,9 +21,9 @@ class TFIDF():
 
         for doc, document in self.docs.items():
 
-          docss = document
+          docs = document
 
-          for i in range(len(docss)):
+          for i in range(len(docs)):
 
             score = 0
 
@@ -38,8 +42,10 @@ class TFIDF():
 
           for i in indices:
 
-            results.append(docss[i[1]])
+            results.append(docs[i[1]])
 
         results = [{"text": r} for r in results]
 
         return results
+
+
