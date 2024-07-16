@@ -15,11 +15,20 @@ tokenizer = AutoTokenizer.from_pretrained('vinai/phobert-base')
 def get_embedding(item):
     tokens = tokenizer(item['text'], return_tensors='pt', truncation=True, padding='max_length', max_length=128)
 
-    with torch.no_grad():
-        output = model(**tokens)
-    embedding = output.last_hidden_state.mean(dim=1).squeeze().cpu().numpy()
+    outputs = model(**tokens)
+    outputs.keys()
+    embedding = outputs.last_hidden_state
 
-    return {'embedding': embedding}
+    mask = tokens['attention_mask'].unsqueeze(-1).expand(embedding.size()).float()
+    mask_embedding = mask * embedding
+    sum_embedding = torch.sum(mask_embedding,1)
+    counted = torch.clamp(mask.sum(1),min=1e-9)
+    mean_pooled = sum_embedding / counted
+    embedding = mean_pooled.detach().numpy()
+    return {
+        'text': item['text'],
+        'embedding': embedding
+    }
 
 class ReRanker():
     def __init__(self):
